@@ -130,7 +130,7 @@ namespace CntkMnistPractice
 
             int[] s2 = { outputDim };
             var plusParam = new Parameter(s2, 0.0f, device, "plusParam");
-            return CNTKLib.Plus(plusParam, timesFunction, outputName);
+            return CNTKLib.ReLU(CNTKLib.Plus(plusParam, timesFunction, outputName));
         }
     }
 }

@@ -125,5 +125,5 @@ FunctionPtr MnistClassifier::FullyConnectedLinearLayer(const Variable & input, i
 	NDShape s2 = { (size_t)outputDim };
 	Parameter plusParam(s2, 0.0f, device, L"plusParam");
 
-	return Plus(plusParam, timesFunction, outputName);
+	return ReLU(Plus(plusParam, timesFunction, outputName));
 }
