@@ -1,7 +1,7 @@
 
 # CntkMnistPractice
 MNIST classifier using CNTK written in C++ and C#. Only used fully connected layers.
-There are two versions of this program - both ones do the exactly same thing.
+There are two versions of this program - both ones do exactly the same thing.
 
 ## Files
 ### Program.cpp / Program.cs
