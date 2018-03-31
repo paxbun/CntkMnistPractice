@@ -28,7 +28,7 @@ namespace CntkMnistPractice
             this.modelPath = modelPath;
         }
 
-        public void Train(DeviceDescriptor device, Mnist trainItems, bool ignoreTrainedFile = false)
+        public void Train(DeviceDescriptor device, Mnist trainItems, int epoches = 1, bool ignoreTrainedFile = false)
         {
             imageDim = new int[] { trainItems.Rows * trainItems.Columns };
             labelDim = new int[] { numClasses };

@@ -10,19 +10,19 @@
 #include <limits>
 #include <vector>
 
-size_t GetFileSize(std::wstring path);
+size_t GetFileSize(const std::wstring & path);
 
 class MnistItem
 {
 private:
 	unsigned char * _Image;
 	unsigned char _Label;
-	int _Rows;
-	int _Columns;
+	size_t _Rows;
+	size_t _Columns;
 
 public:
 	MnistItem();
-	MnistItem(void * data, unsigned char label, int rows, int columns);
+	MnistItem(void * data, unsigned char label, size_t rows, size_t columns);
 	MnistItem(const MnistItem & other);
 	MnistItem(MnistItem && other);
 	MnistItem & operator=(const MnistItem & other);
@@ -33,25 +33,26 @@ public:
 	inline unsigned char * GetImage() { return _Image; } 
 	inline const unsigned char * GetImage() const { return _Image; }
 	inline unsigned char GetLabel() const { return _Label; }
-	inline int GetRows() const { return _Rows; }
-	inline int GetColumns() const { return _Columns; }
+	inline size_t GetRows() const { return _Rows; }
+	inline size_t GetColumns() const { return _Columns; }
 };
 
 template<class FloatType>
 class NormalizedMnistItem
 {
+	static_assert(std::is_floating_point<FloatType>::value, "FloatType should be floating-point type.");
 private:
 	std::vector<FloatType> _Image;
 	std::vector<FloatType> _Label;
-	int _Rows;
-	int _Columns;
+	size_t _Rows;
+	size_t _Columns;
 
 public:
 	NormalizedMnistItem(const MnistItem & item)
 		: _Rows(item.GetRows()), _Columns(item.GetColumns()), _Image(item.GetRows() * item.GetColumns(), 0), _Label(10, 0)
 	{
 		_Label[item.GetLabel()] = static_cast<FloatType>(1.0);
-		for (int i = 0; i < _Rows * _Columns; i++)
+		for (size_t i = 0; i < _Rows * _Columns; i++)
 		{
 			_Image[i] = ((FloatType)item.GetImage()[i]) / std::numeric_limits<unsigned char>::max();
 		}
@@ -65,36 +66,36 @@ public:
 	inline std::vector<FloatType> & GetLabel() { return _Label; }
 	inline const std::vector<FloatType> & GetImage() const { return _Image; }
 	inline const std::vector<FloatType> & GetLabel() const { return _Label; }
-	inline int GetRows() const { return _Rows; }
-	inline int GetColumns() const { return _Columns; }
+	inline size_t GetRows() const { return _Rows; }
+	inline size_t GetColumns() const { return _Columns; }
 };
 
 class Mnist
 {
 private:
 	MnistItem* _Image;
-	int _Length;
-	int _Rows;
-	int _Columns;
+	size_t _Length;
+	size_t _Rows;
+	size_t _Columns;
 
 public:
-	int GetLength() const { return _Length; }
-	int GetRows() const { return _Rows; }
-	int GetColumns() const { return _Columns; }
+	size_t GetLength() const { return _Length; }
+	size_t GetRows() const { return _Rows; }
+	size_t GetColumns() const { return _Columns; }
 
 public:
-	inline MnistItem & GetAt(int i)
+	inline MnistItem & GetAt(size_t i)
 	{
 		return _Image[i];
 	}
 
-	inline const MnistItem & GetAt(int i) const
+	inline const MnistItem & GetAt(size_t i) const
 	{
 		return _Image[i];
 	}
 
 private:
-	static int ByteToInt(unsigned char * num);
+	static size_t ByteToInt(unsigned char * num);
 
 public:
 	Mnist(std::wstring imagePath, std::wstring labelPath, bool normalize = false);

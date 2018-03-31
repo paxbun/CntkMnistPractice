@@ -17,8 +17,8 @@ namespace CntkMnistPractice
             {
                 Console.Write("Loading MNIST models...");
                 var directory = ""; // TODO: Add the solution directory so as to read MNIST data files.
-                var train = new Mnist(directory + "train-images.idx3-ubyte", directory + "train-labels.idx1-ubyte", true);
-                var test = new Mnist(directory + "t10k-images.idx3-ubyte", directory + "t10k-labels.idx1-ubyte", true);
+                var train = new Mnist(directory + "\\MNIST\\train-images.idx3-ubyte", directory + "\\MNIST\\train-labels.idx1-ubyte", true);
+                var test = new Mnist(directory + "\\MNIST\\t10k-images.idx3-ubyte", directory + "\\MNIST\\t10k-labels.idx1-ubyte", true);
                 Console.WriteLine("Done. TrainLength: {0}, TestLength: {1}", train.Length, test.Length);
                 
                 var device = DeviceDescriptor.GPUDevice(0);
@@ -28,7 +28,7 @@ namespace CntkMnistPractice
 
                 var classifier = new MnistClassifier(directory + "trainedModel.bin");
                 Console.WriteLine("Training...");
-                classifier.Train(device, train, true);
+                classifier.Train(device, train, 3);
                 Console.Write("Evaluating...");
                 float accuracy = classifier.Evaluate(device, test);
                 Console.WriteLine("Done. Accuracy: {0}", accuracy);

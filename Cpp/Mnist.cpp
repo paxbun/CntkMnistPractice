@@ -1,11 +1,13 @@
 #include "Mnist.h"
+#include <cstdio>
 
-size_t GetFileSize(std::wstring path)
+size_t GetFileSize(const std::wstring & path)
 {
-	std::ifstream in(path, std::ifstream::ate | std::ifstream::binary);
-	auto rtn = in.tellg();
-	in.close();
-	return rtn;
+	struct _stat64 st;
+	if (_wstat64(path.c_str(), &st) != 0) {
+		return 0;
+	}
+	return st.st_size;
 }
 
 MnistItem::MnistItem()
@@ -13,7 +15,7 @@ MnistItem::MnistItem()
 {
 }
 
-MnistItem::MnistItem(void * data, unsigned char label, int rows, int columns)
+MnistItem::MnistItem(void * data, unsigned char label, size_t rows, size_t columns)
 	: _Label(label), _Image(new unsigned char[rows * columns]), _Rows(rows), _Columns(columns)
 {
 	memcpy(_Image, data, rows * columns);
@@ -56,13 +58,13 @@ MnistItem::~MnistItem()
 	delete[] _Image;
 }
 
-int Mnist::ByteToInt(unsigned char * num)
+size_t Mnist::ByteToInt(unsigned char * num)
 {
-	int result = 0;
-	int offset[] = { 24, 16, 8, 0 };
-	for (int i = 0; i < 4; i++)
+	size_t result = 0;
+	size_t offset[] = { 24, 16, 8, 0 };
+	for (size_t i = 0; i < 4; i++)
 	{
-		result |= ((int)num[i]) << offset[i];
+		result |= ((size_t)num[i]) << offset[i];
 	}
 	return result;
 }
@@ -71,12 +73,16 @@ Mnist::Mnist(std::wstring imagePath, std::wstring labelPath, bool normalize)
 {
 	std::ifstream imageRead(imagePath, std::ifstream::binary);
 	std::ifstream labelRead(labelPath, std::ifstream::binary);
+	if (!labelRead || !imageRead)
+		throw std::exception("File doesn't exsist.");
 	unsigned char * imageTemp = new unsigned char[GetFileSize(imagePath)];
 	unsigned char * labelTemp = new unsigned char[GetFileSize(labelPath)];
 	imageRead.read((char *)imageTemp, GetFileSize(imagePath));
 	labelRead.read((char *)labelTemp, GetFileSize(labelPath));
-	int imageMagicNumber = ByteToInt(imageTemp + 0);
-	int labelMagicNumber = ByteToInt(labelTemp + 0);
+	imageRead.close();
+	labelRead.close();
+	size_t imageMagicNumber = ByteToInt(imageTemp + 0);
+	size_t labelMagicNumber = ByteToInt(labelTemp + 0);
 	if (imageMagicNumber != 2051)
 	{
 		delete[] imageTemp;
@@ -91,8 +97,8 @@ Mnist::Mnist(std::wstring imagePath, std::wstring labelPath, bool normalize)
 		throw std::exception("Not a valid MNIST label data file.");
 	}
 
-	int imageLength = ByteToInt(imageTemp + 4);
-	int labelLength = ByteToInt(labelTemp + 4);
+	size_t imageLength = ByteToInt(imageTemp + 4);
+	size_t labelLength = ByteToInt(labelTemp + 4);
 	if (imageLength != labelLength)
 	{
 		delete[] imageTemp;
@@ -100,8 +106,8 @@ Mnist::Mnist(std::wstring imagePath, std::wstring labelPath, bool normalize)
 		throw std::exception("Number of items of two files are not the same.");
 	}
 
-	int imageRows = ByteToInt(imageTemp + 8);
-	int imageColumns = ByteToInt(imageTemp + 12);
+	size_t imageRows = ByteToInt(imageTemp + 8);
+	size_t imageColumns = ByteToInt(imageTemp + 12);
 
 	_Length = imageLength;
 	if (normalize)
@@ -116,7 +122,7 @@ Mnist::Mnist(std::wstring imagePath, std::wstring labelPath, bool normalize)
 	}
 	_Image = new MnistItem[_Length];
 
-	for (int i = 0; i < _Length; i++)
+	for (size_t i = 0; i < _Length; i++)
 	{
 		_Image[i] = MnistItem(imageTemp + 16 + i * _Rows * _Columns, labelTemp[8 + i], _Rows, _Columns);
 	}

@@ -27,7 +27,7 @@ private:
 
 public:
 	MnistClassifier(const std::wstring & modelPath);
-	void Train(const DeviceDescriptor & device, const Mnist & trainItems, bool ignoreTrainedFile = false);
+	void Train(const DeviceDescriptor & device, const Mnist & trainItems, size_t epoches = 1, bool ignoreTrainedFile = false);
 	float Evaluate(const DeviceDescriptor & device, const Mnist & testItems);
 	~MnistClassifier();
 

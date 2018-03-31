@@ -1,30 +1,30 @@
 #include "MnistClassifier.h"
-#include <Shlwapi.h>
 #include <vector>
 #include <map>
 #include <iostream>
-
-#pragma comment(lib, "Shlwapi.lib")
-
 
 MnistClassifier::MnistClassifier(const std::wstring & modelPath)
 	: _ModelPath(modelPath)
 {
 }
 
-void MnistClassifier::Train(const DeviceDescriptor & device, const Mnist & trainItems, bool ignoreTrainedFile)
+void MnistClassifier::Train(const DeviceDescriptor & device, const Mnist & trainItems, size_t epoches, bool ignoreTrainedFile)
 {
 	_ImageDim = { (size_t)trainItems.GetRows() * trainItems.GetColumns() };
 	_LabelDim = { (size_t)_NumClasses };
 
-	if (PathFileExists(_ModelPath.c_str()) && !ignoreTrainedFile)
+	std::ifstream modelRead(_ModelPath, std::ifstream::binary);
+	if (modelRead && !ignoreTrainedFile)
 	{
 		std::wcout << "Trained model exists. Terminating training." << std::endl;
 		std::ifstream modelRead(_ModelPath, std::ifstream::binary);
 		_Model.resize(GetFileSize(_ModelPath));
 		modelRead.read((char*)_Model.data(), _Model.size());
+		modelRead.close();
 		return;
 	}
+	else
+		modelRead.close();
 
 	auto input = InputVariable(_ImageDim, DataType::Float, _FeatureStreamName);
 	auto scaledInput = ElementTimes(Constant::Scalar<float>(0.00390625f, device), input);
@@ -42,7 +42,7 @@ void MnistClassifier::Train(const DeviceDescriptor & device, const Mnist & train
 	std::vector<LearnerPtr> parameterLearners = { SGDLearner(classifierOutput->Parameters(), learningRatePerSample) };
 	auto trainer = CreateTrainer(classifierOutput, trainingLoss, prediction, parameterLearners);
 
-	for (int epoch = 1; epoch <= 1; epoch++)
+	for (int epoch = 1; epoch <= epoches; epoch++)
 	{
 		for (auto& item : trainItems)
 		{
@@ -68,7 +68,7 @@ float MnistClassifier::Evaluate(const DeviceDescriptor & device, const Mnist & t
 	auto input = classifier->Arguments()[0];
 	auto output = classifier->Output();
 
-	int correct = 0;
+	size_t correct = 0;
 	for (auto & item : testItems)
 	{
 		NormalizedMnistItem<float> normalized(item);
@@ -107,7 +107,7 @@ MnistClassifier::~MnistClassifier()
 
 FunctionPtr MnistClassifier::FullyConnectedLinearLayer(const Variable & input, int outputDim, const DeviceDescriptor & device, const std::wstring & outputName)
 {
-	int inputDim = input.Shape()[0];
+	size_t inputDim = input.Shape()[0];
 
 	NDShape s = { (size_t)outputDim, (size_t)inputDim };
 	Parameter timesParam(

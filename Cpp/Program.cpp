@@ -17,8 +17,8 @@ int main(int argc, char * argv[])
 	{
 		wcout << "Loading MNIST models...";
 		wstring directory = L""; // TODO: Add the solution directory so as to read MNIST data files.
-		Mnist train(directory + L"train-images.idx3-ubyte", directory + L"train-labels.idx1-ubyte", true);
-		Mnist test(directory + L"t10k-images.idx3-ubyte", directory + L"t10k-labels.idx1-ubyte", true);
+		Mnist train(directory + L"\\MNIST\\train-images.idx3-ubyte", directory + L"\\MNIST\\train-labels.idx1-ubyte", true);
+		Mnist test(directory + L"\\MNIST\\t10k-images.idx3-ubyte", directory + L"\\MNIST\\t10k-labels.idx1-ubyte", true);
 		wcout << "Done. TrainLength: " << train.GetLength() << ", TestLength: " << test.GetLength() << endl;
 
 		auto device = DeviceDescriptor::GPUDevice(0);
@@ -28,7 +28,7 @@ int main(int argc, char * argv[])
 
 		MnistClassifier classifier(directory + L"trainedModel.bin");
 		wcout << "Training..." << endl;
-		classifier.Train(device, train, true);
+		classifier.Train(device, train, 3);
 		wcout << "Evaluating...";
 		float accuracy = classifier.Evaluate(device, test);
 		wcout << "Done. Accuracy: " << accuracy << endl;
