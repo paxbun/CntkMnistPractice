@@ -3,6 +3,7 @@
 #ifndef MNIST_INCLUDED
 #define MNIST_INCLUDED
 
+
 #include <cstring>
 #include <fstream>
 #include <string>

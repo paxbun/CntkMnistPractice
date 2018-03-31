@@ -3,6 +3,7 @@
 #ifndef MNIST_CLASSIFIER_INCLUDED
 #define MNIST_CLASSIFIER_INCLUDED
 
+
 #include "Mnist.h"
 #include <string>
 #include "CNTKLibrary.h"
