@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef MNIST_CLASSIFIER_INCLUDED
+#define MNIST_CLASSIFIER_INCLUDED
+
 #include "Mnist.h"
 #include <string>
 #include "CNTKLibrary.h"
@@ -31,3 +34,4 @@ private:
 	FunctionPtr FullyConnectedLinearLayer(const Variable & input, int outputDim, const DeviceDescriptor & device, const std::wstring & outputName = L"");
 };
 
+#endif

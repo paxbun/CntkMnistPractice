@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef MNIST_INCLUDED
+#define MNIST_INCLUDED
+
 #include <cstring>
 #include <fstream>
 #include <string>
@@ -117,3 +120,5 @@ public:
 		return _Image + _Length;
 	}
 };
+
+#endif
