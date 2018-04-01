@@ -1,3 +1,6 @@
+# Other version of this file
+[ja-jp](README.ja-jp.md): 日本語
+[ko-kr](README.ko-kr.md): 한국어
 
 # CntkMnistPractice
 MNIST classifier using CNTK written in C++ and C#. Only used fully-connected layers.
