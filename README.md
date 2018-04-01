@@ -1,14 +1,14 @@
 
 # CntkMnistPractice
-MNIST classifier using CNTK written in C++ and C#. Only used fully connected layers.
-There are two versions of this program - both ones do exactly the same thing.
+MNIST classifier using CNTK written in C++ and C#. Only used fully-connected layers.
+There are two versions of this program - both ones do exactly the same thing, but vary in languages.
 
 ## Files
 ### Program.cpp / Program.cs
 The entry point of the program.
 
 ### Mnist.cpp (Mnist.h) / Mnist.cs
-The file has the definition of Mnist class and MnistItem, NormalizedMnistItem.
+The file has the definition of 3 classes: Mnist, MnistItem and NormalizedMnistItem.
 #### Mnist class
 The list of Mnist items.
 #### MnistItem class
