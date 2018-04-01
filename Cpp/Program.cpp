@@ -26,7 +26,7 @@ int main(int argc, char * argv[])
 
 		clock_t startTime = clock();
 
-		MnistClassifier classifier(directory + L"trainedModel.bin");
+		MnistClassifier classifier(directory + L"\\trainedModel.bin");
 		wcout << "Training..." << endl;
 		classifier.Train(device, train, 3);
 		wcout << "Evaluating...";

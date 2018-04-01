@@ -26,7 +26,7 @@ namespace CntkMnistPractice
                 
                 var startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
-                var classifier = new MnistClassifier(directory + "trainedModel.bin");
+                var classifier = new MnistClassifier(directory + "\\trainedModel.bin");
                 Console.WriteLine("Training...");
                 classifier.Train(device, train, 3);
                 Console.Write("Evaluating...");
